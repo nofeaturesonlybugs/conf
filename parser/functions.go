@@ -57,11 +57,9 @@ func (me Parsed) Map() map[string][]map[string][]string {
 }
 
 // Parse parses a configuration string.
-func Parse(t *Tokenizer, options *Options) (Parsed, error) {
+func Parse(t *Tokenizer, runes Runes) (Parsed, error) {
 	if t == nil {
 		return nil, errors.NilArgument("t").Type(t)
-	} else if options == nil {
-		return nil, errors.NilArgument("options").Type(options)
 	}
 	rv := make(Parsed)
 	rv[""] = &SectionBlock{Last: make(Section)} // A default unnamed section.
@@ -69,12 +67,12 @@ func Parse(t *Tokenizer, options *Options) (Parsed, error) {
 	current := rv[""].Last // Current block to put key=values into.
 	for !t.Eof() {
 		ScanWhileType(t, TokenNewline|TokenWhiteSpace) // Scan whitespace and newlines.
-		if tok, typ := t.Peek(); typ == TokenPunct && rune(tok[0]) != options.sectionOpen {
+		if tok, typ := t.Peek(); typ == TokenPunct && !runes.IsOpenSection(rune(tok[0])) {
 			// This is a comment.
 			if _, err := ScanComment(t); err != nil {
 				return nil, errors.Go(err)
 			}
-		} else if typ == TokenPunct && rune(tok[0]) == options.sectionOpen {
+		} else if typ == TokenPunct && runes.IsOpenSection(rune(tok[0])) {
 			// This should be a section.
 			t.Next()                          // Leading punctuation in section name.
 			ScanWhileType(t, TokenWhiteSpace) // Ignore whitespace.
@@ -89,20 +87,20 @@ func Parse(t *Tokenizer, options *Options) (Parsed, error) {
 			current = rv[tok].Last
 			//
 			ScanWhileType(t, TokenWhiteSpace) // Ignore whitespace.
-			if tok, typ = t.Next(); typ != TokenPunct && rune(tok[0]) != options.sectionClose {
+			if tok, typ = t.Next(); typ != TokenPunct && runes.IsCloseSection(rune(tok[0])) {
 				return nil, errors.Errorf("Parse expects section closing punctuation; got [%v], %v", typ, tok)
 			}
 		} else if typ == TokenAlphaNum {
 			// Should be a key=value pair.
 			key, value, err := tok, "", error(nil)
 			//
-			if key, err = ScanKey(t, options.isAssign); err != nil {
+			if key, err = ScanKey(t, runes.IsAssign); err != nil {
 				return nil, errors.Go(err)
 			}
 			//
 			// ScanKey scans leading and trailing whitespace around the key so next token should be
 			// an assignment rune.
-			if tok, typ = t.Next(); !options.isAssign(rune(tok[0])) {
+			if tok, typ = t.Next(); !runes.IsAssign(rune(tok[0])) {
 				return nil, errors.Errorf("Parse expects assignment rune; got [%v] %v", typ, tok)
 			}
 			//
@@ -111,7 +109,7 @@ func Parse(t *Tokenizer, options *Options) (Parsed, error) {
 			// Only scan a value if next token is not a newline; if the next value is a newline
 			// do nothing and append empty value.
 			if _, typ2 := t.Peek(); typ2 != TokenNewline {
-				if value, err = ScanValue(t, options.isQuote); err != nil {
+				if value, err = ScanValue(t, runes.IsQuote); err != nil {
 					return nil, errors.Go(err)
 				}
 			}

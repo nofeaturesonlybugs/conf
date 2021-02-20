@@ -13,8 +13,7 @@ hello = world
 foo = bar
 `
 	//
-	parser := parser.NewParser()
-	if parsed, err := parser.Parse(s); err != nil {
+	if parsed, err := parser.DefaultParser.Parse(s); err != nil {
 		fmt.Println(err)
 	} else if _, ok := parsed[""]; ok {
 		fmt.Printf("The global section.\n")
@@ -34,8 +33,7 @@ hello = world
 foo = bar
 `
 	//
-	parser := parser.NewParser()
-	if parsed, err := parser.Parse(s); err != nil {
+	if parsed, err := parser.DefaultParser.Parse(s); err != nil {
 		fmt.Println(err)
 	} else if _, ok := parsed["main"]; ok {
 		fmt.Printf("Section `main` exists.\n")
@@ -57,8 +55,7 @@ foo = bar
 `
 	reader := strings.NewReader(s)
 	//
-	parser := parser.NewParser()
-	if parsed, err := parser.ParseReader(reader); err != nil {
+	if parsed, err := parser.DefaultParser.ParseReader(reader); err != nil {
 		fmt.Println(err)
 	} else if _, ok := parsed["main"]; ok {
 		fmt.Printf("Section `main` exists.\n")
@@ -78,11 +75,14 @@ func ExampleParser_options() {
 message ~ /Hello World!/
 `
 	//
-	parser := parser.NewParser(
-		parser.OptAssign([]rune{'~'}),
-		parser.OptQuote([]rune{'/'}),
-		parser.OptSectionRunes([2]rune{'(', ')'}),
-	)
+	parser := &parser.Parser{
+		Runes: parser.Runes{
+			Assign:       []rune{'~'},
+			Quote:        []rune{'/'},
+			SectionOpen:  []rune{'('},
+			SectionClose: []rune{')'},
+		},
+	}
 	if parsed, err := parser.Parse(s); err != nil {
 		fmt.Println(err)
 	} else if _, ok := parsed["main"]; ok {

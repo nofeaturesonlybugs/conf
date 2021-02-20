@@ -18,10 +18,8 @@ key1 = value1
 `
 	tokenizer := parser.NewTokenizer(str)
 	chk.NotNil(tokenizer)
-	options := parser.NewOptions()
-	chk.NotNil(options)
 	//
-	parsed, err := parser.Parse(tokenizer, options)
+	parsed, err := parser.Parse(tokenizer, parser.DefaultParser.Runes)
 	chk.NoError(err)
 	chk.NotNil(parsed)
 	//
@@ -39,8 +37,7 @@ label=Example Service
 description=This is an example service.
 `
 	//
-	parser := parser.NewParser()
-	parsed, err := parser.Parse(s)
+	parsed, err := parser.DefaultParser.Parse(s)
 	chk.NoError(err)
 	chk.NotNil(parsed["service"])
 	chk.Equal("examplesvc", parsed["service"].Last["name"].Last)
@@ -57,8 +54,7 @@ empty =
 ; new comment
 `
 	//
-	parser := parser.NewParser()
-	parsed, err := parser.Parse(s)
+	parsed, err := parser.DefaultParser.Parse(s)
 	chk.NoError(err)
 	chk.NotNil(parsed[""])
 	chk.Equal("", parsed[""].Last["empty"].Last)
@@ -84,10 +80,8 @@ age = 42
 `
 	tokenizer := parser.NewTokenizer(str)
 	chk.NotNil(tokenizer)
-	options := parser.NewOptions()
-	chk.NotNil(options)
 	//
-	parsed, err := parser.Parse(tokenizer, options)
+	parsed, err := parser.Parse(tokenizer, parser.DefaultParser.Runes)
 	chk.NoError(err)
 	chk.NotNil(parsed)
 	//
@@ -137,10 +131,8 @@ age = 38
 `
 	tokenizer := parser.NewTokenizer(str)
 	chk.NotNil(tokenizer)
-	options := parser.NewOptions()
-	chk.NotNil(options)
 	//
-	parsed, err := parser.Parse(tokenizer, options)
+	parsed, err := parser.Parse(tokenizer, parser.DefaultParser.Runes)
 	chk.NoError(err)
 	chk.NotNil(parsed)
 	//
@@ -198,10 +190,8 @@ baz = zaz2
 `
 	tokenizer := parser.NewTokenizer(str)
 	chk.NotNil(tokenizer)
-	options := parser.NewOptions()
-	chk.NotNil(options)
 	//
-	parsed, err := parser.Parse(tokenizer, options)
+	parsed, err := parser.Parse(tokenizer, parser.DefaultParser.Runes)
 	chk.NoError(err)
 	chk.NotNil(parsed)
 	//
@@ -223,6 +213,7 @@ baz = zaz2
 	chk.Equal(2, len(parsed["options"].Last["foo"].Slice))
 	chk.Equal(2, len(parsed["options"].Last["baz"].Slice))
 }
+
 func TestScanComment(t *testing.T) {
 	chk := assert.New(t)
 	//
