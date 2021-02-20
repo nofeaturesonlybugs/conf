@@ -7,7 +7,6 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	// "github.com/nofeaturesonlybugs/assert" // TODO RM
 	"github.com/nofeaturesonlybugs/conf"
 )
 

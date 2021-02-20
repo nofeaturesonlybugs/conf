@@ -94,7 +94,6 @@ func Parse(t *Tokenizer, options *Options) (Parsed, error) {
 			}
 		} else if typ == TokenAlphaNum {
 			// Should be a key=value pair.
-			// t.Next() // We got here from a Peek(); must consume the key though. // TODO RM
 			key, value, err := tok, "", error(nil)
 			//
 			if key, err = ScanKey(t, options.isAssign); err != nil {
