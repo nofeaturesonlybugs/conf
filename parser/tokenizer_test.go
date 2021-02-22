@@ -1,6 +1,7 @@
 package parser_test
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -266,4 +267,14 @@ func TestTokenizerMemoryRewind(t *testing.T) {
 	chk.Equal(parser.TokenAlphaNum, typ)
 	//
 	chk.Equal(true, tokenizer.Eof())
+}
+
+func TestTokenStrings(t *testing.T) {
+	chk := assert.New(t)
+	chk.Equal("None", parser.TokenNone.String())
+	chk.Equal("AlphaNum", parser.TokenAlphaNum.String())
+	chk.Equal("Newline", parser.TokenNewline.String())
+	chk.Equal("Punctuation", parser.TokenPunct.String())
+	chk.Equal("Whitespace", parser.TokenWhiteSpace.String())
+	chk.Equal(true, strings.HasPrefix(parser.Token(-10).String(), "Unknown"))
 }

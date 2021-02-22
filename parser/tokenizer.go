@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"fmt"
 	"unicode"
 )
 
@@ -15,8 +16,43 @@ const (
 	TokenWhiteSpace Token = 1 << iota
 )
 
-// Tokenizer reads a string into tokens.
-type Tokenizer struct {
+// String returns the Token as a string.
+func (t Token) String() string {
+	switch t {
+	case TokenNone:
+		return "None"
+	case TokenAlphaNum:
+		return "AlphaNum"
+	case TokenNewline:
+		return "Newline"
+	case TokenPunct:
+		return "Punctuation"
+	case TokenWhiteSpace:
+		return "Whitespace"
+	}
+	return fmt.Sprintf("Unknown %T= %v", t, int(t))
+}
+
+// Tokenizer returns tokens.
+type Tokenizer interface {
+	// Eof returns true when the tokenizer has no more tokens to return.
+	Eof() bool
+	// Memory records the current Tokenizer position and a call to Rewid() will reset the Tokenizer to
+	// this position.  Use this to make consecutive calls to Peek() or Next() for look-ahead past a single token.
+	Memory()
+	// Peek returns the next token and its type without advancing the internal counters; an empty string signals
+	// the end of the Tokenizer's input.
+	Peek() (string, Token)
+	// Next returns the token and its type that would be returned by Peek() but then advances internal
+	// counters to the next possible token.
+	Next() (string, Token)
+	// Rewind resets the Tokenizer to the postion recorded by calling Memory() or to the beginning
+	// of the string if Memory was never called.
+	Rewind()
+}
+
+// tokenizer reads a string into tokens.
+type tokenizer struct {
 	// String to tokenize.
 	s string
 	// Length of s.
@@ -34,31 +70,26 @@ type Tokenizer struct {
 }
 
 // NewTokenizer creates a new Tokenizer type.
-func NewTokenizer(s string) *Tokenizer {
-	rv := &Tokenizer{s, len(s), 0, 0, TokenNone, 0, 0, TokenNone}
+func NewTokenizer(s string) Tokenizer {
+	rv := &tokenizer{s, len(s), 0, 0, TokenNone, 0, 0, TokenNone}
 	return rv
 }
 
 // Eof returns true when the tokenizer has no more tokens to return.
-func (me *Tokenizer) Eof() bool {
-	if me == nil {
-		return true
-	}
+func (me *tokenizer) Eof() bool {
 	return me.n >= me.max
 }
 
 // Memory records the current Tokenizer position and a call to Rewid() will reset the Tokenizer to
 // this position.  Use this to make consecutive calls to Peek() or Next() for look-ahead past a single token.
-func (me *Tokenizer) Memory() {
-	if me != nil {
-		me.rewindN, me.rewindPeek, me.rewindTyp = me.n, me.peek, me.typ
-	}
+func (me *tokenizer) Memory() {
+	me.rewindN, me.rewindPeek, me.rewindTyp = me.n, me.peek, me.typ
 }
 
 // Peek returns the next token and its type without advancing the internal counters; an empty string signals
 // the end of the Tokenizer's input.
-func (me *Tokenizer) Peek() (string, Token) {
-	if me == nil || me.n >= me.max {
+func (me *tokenizer) Peek() (string, Token) {
+	if me.n >= me.max {
 		return "", TokenNone
 	} else if me.peek != 0 {
 		return me.s[me.n : me.n+me.peek], me.typ
@@ -98,20 +129,16 @@ func (me *Tokenizer) Peek() (string, Token) {
 
 // Next returns the token and its type that would be returned by Peek() but then advances internal
 // counters to the next possible token.
-func (me *Tokenizer) Next() (string, Token) {
-	if me != nil {
-		defer func() {
-			me.n = me.n + me.peek
-			me.peek = 0
-		}()
-	}
+func (me *tokenizer) Next() (string, Token) {
+	defer func() {
+		me.n = me.n + me.peek
+		me.peek = 0
+	}()
 	return me.Peek()
 }
 
 // Rewind resets the Tokenizer to the postion recorded by calling Memory() or to the beginning
 // of the string if Memory was never called.
-func (me *Tokenizer) Rewind() {
-	if me != nil {
-		me.n, me.peek, me.typ = me.rewindN, me.rewindPeek, me.rewindTyp
-	}
+func (me *tokenizer) Rewind() {
+	me.n, me.peek, me.typ = me.rewindN, me.rewindPeek, me.rewindTyp
 }
