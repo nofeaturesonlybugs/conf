@@ -58,7 +58,7 @@ func (me *Conf) fill(target interface{}, tag string) error {
 	globalSection, getter := set.MapGetter(m[""][len(m[""])-1]), set.MapGetter(m)
 	scalars := map[string]set.Getter{}
 	for _, field := range fields {
-		if field.Value.IsScalar {
+		if field.Value.IsScalar || (field.Value.IsSlice && field.Value.ElemTypeInfo.IsScalar) {
 			if tag == "" {
 				scalars[field.Field.Name] = globalSection
 			} else {
