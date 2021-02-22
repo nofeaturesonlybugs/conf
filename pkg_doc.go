@@ -1,4 +1,4 @@
-// Package conf can parse configuration text and populate structs with the results
+// Package conf can parse configuration text and populate structs with the results.
 //
 // Basic Syntax
 //

@@ -30,6 +30,8 @@ is preserved in
 quoted values!   "
 	quote3 = ` + backtick + `
 
+	quote in middle = asdf '" fdsa
+
 	[ section can have spaces too ]
 	section key 	=		 section value
 
@@ -41,6 +43,8 @@ quoted values!   "
 		Quote1 string `conf:"quote1"`
 		Quote2 string `conf:"quote2"`
 		Quote3 string `conf:"quote3"`
+
+		QuoteInMiddle string `conf:"quote in middle"`
 
 		// Tests [section]
 		Section struct {
@@ -57,6 +61,7 @@ quoted values!   "
 		chk.Equal("This value is \"quoted\"", t.Quote1)
 		chk.Equal("  whitespace\nis preserved in\nquoted values!   ", t.Quote2)
 		chk.Equal("backticks quote too!", t.Quote3)
+		chk.Equal("asdf '\" fdsa", t.QuoteInMiddle)
 		// section config
 		chk.Equal("section value", t.Section.SectionValue)
 	}
@@ -308,8 +313,6 @@ rgb = 00ff00
 	if err = conf.FillByTag("conf", &t); err != nil {
 		fmt.Println(err.Error())
 	}
-	// fmt.Printf("%#v\n", conf) //TODO RM
-	// fmt.Printf("%#v\n", t)    //TODO RM
 	fmt.Printf("%v\n", t.Fruits)
 	for _, color := range t.Color {
 		fmt.Printf("%v %v\n", color.Name, color.Rgb)
