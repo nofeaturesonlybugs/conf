@@ -1,25 +1,27 @@
 // Package parser is the configurable parser for the conf package.
 //
-// The primary type exported by this package is Parser; create an instance of Parser by calling
-// NewParser:
-//	parser := NewParser()
+// The primary type exported by this package is Parser.  You can use the default parser:
+//	var DefaultParser = Parser{
+//		Runes: Runes{
+//			Assign:       []rune{'='},
+//			Quote:        []rune{'\'', '"', '`'},
+//			SectionOpen:  []rune{'['},
+//			SectionClose: []rune{']'},
+//		},
+//	}
 //
-// By providing zero options to NewParser a default parser is created; options can be provided to alter
-// the parsing behavior:
-// 	parser := parser.NewParser(
-//		// Changes assignment rune from '=' to '~'
-// 		parser.OptAssign([]rune{'~'}),
-//		// Changes quote runes from ['\'', '"', '`'] to '/'
-// 		parser.OptQuote([]rune{'/'}),
-//		// Changes section runes from ['[', ']'] to ['(', ')']
-// 		parser.OptSectionRunes([2]rune{'(', ')'}),
-// 	)
+// or create your own:
+//	myParser := parser.Parser{
+//		Runes: Runes{
+//			Assign:       []rune{'='},
+//			Quote:        []rune{'`'}, // Backtick quotes only.
+//			SectionOpen:  []rune{'{'}, // Curly bracket sections.
+//			SectionClose: []rune{'}'},
+//		},
+//	}
 //
-// Note that OptAssign and OptQuote are slices and can accept multiple runes.  OptSectionRunes
-// is an array of length 2 where the first and second elements open and close a section label respectively.
-//
-// The rune(s) provided to the options should be mutually exclusive sets; the behavior for disregarding this
-// rule is undefined.
+// The given runes should be mutually exclusive sets when creating a Parser; the behavior for disregarding
+// this rule is undefined.
 //
 // The Parsed Type
 //
@@ -62,7 +64,7 @@
 //	Last string
 //	Slice []string
 //
-// The Slice member will container all key=value lines with the same key-name in the order they were encountered.
+// The Slice member will contain all key=value lines with the same key-name in the order they were encountered.
 // The Last member contains the last key=value encountered for a specific key-name.
 //
 // The example configuration:
