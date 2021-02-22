@@ -13,6 +13,12 @@
 //	key1 = value1
 //	key with spaces = value with spaces!
 //
+// 	quote1 = 'This value is "quoted"'
+// 	quote2 = "  whitespace
+// 	is preserved in
+// 	quoted values!   "
+// 	quote3 = `backticks quote too!`
+//
 //	# Create a section with [ section-name ]
 //	[ section ]
 //	# This key value pair goes into a section named: section
@@ -43,4 +49,53 @@
 // Fill
 //
 // Use Conf.Fill() and Conf.FillByTag() to populate parsed configuration into your structures.  Examples are provided below.
+//
+// Configuration EBNF
+//
+// Here lies the EBNF for configuration syntax:
+//	conf
+//		: line*
+//		;
+//
+//	line
+//		: comment
+//		| section
+//		| key_value
+//		;
+//
+//	section
+//		: '[' key ']'
+//		;
+//
+//	key_value
+//		: key '=' value
+//		;
+//
+//	key
+//		: [a-z0-9]+ key_extend*
+//		;
+//
+//	key_extend
+//		: punct [a-z0-9]+
+//		: ws+ [a-z0-9]+
+//		;
+//
+//	value
+//		: ['] ~[']* [']
+//		: ["] ~["]* ["]
+//		: [`] ~[`]* [`]
+//		: ~[rn]*
+//		;
+//
+//	comment
+//		: punct ~[rn]*
+//		;
+//
+//	punct
+//		: [!@#$%&*()_+=\|;:'"``,.<>/?~-^]
+//		;
+//
+//	ws
+//		: [ t]
+//		;
 package conf

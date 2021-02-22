@@ -13,6 +13,7 @@ import (
 
 func TestConf_Spaces(t *testing.T) {
 	chk := assert.New(t)
+	backtick := "`backticks quote too!`"
 	s := `
 	# Lines beginning with punctuation are comments.
 ; Also a comment!
@@ -23,6 +24,12 @@ func TestConf_Spaces(t *testing.T) {
 	key with spaces = value with spaces
 	key with spaces = other value with spaces!
 
+	quote1 = 'This value is "quoted"'
+	quote2 = "  whitespace
+is preserved in
+quoted values!   "
+	quote3 = ` + backtick + `
+
 	[ section can have spaces too ]
 	section key 	=		 section value
 
@@ -30,6 +37,10 @@ func TestConf_Spaces(t *testing.T) {
 	type T struct {
 		KeyWithSpaces   string   `conf:"key with spaces"`
 		SliceWithSpaces []string `conf:"key with spaces"`
+
+		Quote1 string `conf:"quote1"`
+		Quote2 string `conf:"quote2"`
+		Quote3 string `conf:"quote3"`
 
 		// Tests [section]
 		Section struct {
@@ -43,6 +54,9 @@ func TestConf_Spaces(t *testing.T) {
 		chk.Equal("other value with spaces!", t.KeyWithSpaces)
 		chk.Equal("value with spaces", t.SliceWithSpaces[0])
 		chk.Equal("other value with spaces!", t.SliceWithSpaces[1])
+		chk.Equal("This value is \"quoted\"", t.Quote1)
+		chk.Equal("  whitespace\nis preserved in\nquoted values!   ", t.Quote2)
+		chk.Equal("backticks quote too!", t.Quote3)
 		// section config
 		chk.Equal("section value", t.Section.SectionValue)
 	}
