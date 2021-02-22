@@ -8,6 +8,7 @@ import (
 // Token describes a token type.
 type Token int
 
+// Enums for token types returned from the Tokenizer.
 const (
 	TokenNone       Token = 1 << iota
 	TokenAlphaNum   Token = 1 << iota
@@ -35,8 +36,8 @@ func (t Token) String() string {
 
 // Tokenizer returns tokens.
 type Tokenizer interface {
-	// Eof returns true when the tokenizer has no more tokens to return.
-	Eof() bool
+	// EOF returns true when the tokenizer has no more tokens to return.
+	EOF() bool
 	// Memory records the current Tokenizer position and a call to Rewid() will reset the Tokenizer to
 	// this position.  Use this to make consecutive calls to Peek() or Next() for look-ahead past a single token.
 	Memory()
@@ -75,8 +76,8 @@ func NewTokenizer(s string) Tokenizer {
 	return rv
 }
 
-// Eof returns true when the tokenizer has no more tokens to return.
-func (me *tokenizer) Eof() bool {
+// EOF returns true when the tokenizer has no more tokens to return.
+func (me *tokenizer) EOF() bool {
 	return me.n >= me.max
 }
 
@@ -99,9 +100,8 @@ func (me *tokenizer) Peek() (string, Token) {
 		me.peek++
 		if me.n+me.peek >= me.max {
 			return ' ', false
-		} else {
-			return rune(me.s[me.n+me.peek]), true
 		}
+		return rune(me.s[me.n+me.peek]), true
 	}
 	//
 	r, ok := rune(me.s[me.n]), true

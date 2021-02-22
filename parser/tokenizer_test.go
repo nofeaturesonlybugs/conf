@@ -58,7 +58,7 @@ func TestTokenizerNext(t *testing.T) {
 	chk.Equal(tok, "")
 	chk.Equal(typ, parser.TokenNone)
 	//
-	chk.Equal(true, tokenizer.Eof())
+	chk.Equal(true, tokenizer.EOF())
 }
 
 func TestTokenizerNextHeredoc(t *testing.T) {
@@ -187,7 +187,7 @@ value = true
 	chk.Equal(tok, "")
 	chk.Equal(typ, parser.TokenNone)
 	//
-	chk.Equal(true, tokenizer.Eof())
+	chk.Equal(true, tokenizer.EOF())
 }
 
 func TestTokenizerNextUnclosedQuote(t *testing.T) {
@@ -210,7 +210,7 @@ func TestTokenizerNextUnclosedQuote(t *testing.T) {
 	chk.Equal("", tok)
 	chk.Equal(parser.TokenNone, typ)
 	//
-	chk.Equal(true, tokenizer.Eof())
+	chk.Equal(true, tokenizer.EOF())
 }
 
 func TestTokenizerMemoryRewind(t *testing.T) {
@@ -254,7 +254,7 @@ func TestTokenizerMemoryRewind(t *testing.T) {
 	chk.Equal("main", tok)
 	chk.Equal(parser.TokenAlphaNum, typ)
 	//
-	chk.Equal(true, tokenizer.Eof())
+	chk.Equal(true, tokenizer.EOF())
 	//
 	tokenizer.Rewind()
 	//
@@ -266,7 +266,7 @@ func TestTokenizerMemoryRewind(t *testing.T) {
 	chk.Equal("main", tok)
 	chk.Equal(parser.TokenAlphaNum, typ)
 	//
-	chk.Equal(true, tokenizer.Eof())
+	chk.Equal(true, tokenizer.EOF())
 }
 
 func TestTokenStrings(t *testing.T) {

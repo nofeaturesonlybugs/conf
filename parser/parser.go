@@ -11,6 +11,7 @@ import (
 // State describes the parser state.
 type State int
 
+// Enums for parser state.
 const (
 	StateNone    State = 1 << iota
 	StateComment State = 1 << iota
@@ -121,7 +122,7 @@ func (me Parser) Parse(s string) (Parsed, error) {
 	t, st := NewTokenizer(s), StateNone
 	str, tok := "", TokenNone
 	peek, peekT := "", TokenNone
-	for err == nil && !t.Eof() {
+	for err == nil && !t.EOF() {
 		str, tok = t.Next()
 		switch st {
 		case StateNone:
@@ -244,7 +245,6 @@ func (me Parser) ParseReader(r io.Reader) (Parsed, error) {
 	s := &strings.Builder{}
 	if _, err := io.Copy(s, r); err != nil {
 		return nil, errors.Go(err)
-	} else {
-		return me.Parse(s.String())
 	}
+	return me.Parse(s.String())
 }
