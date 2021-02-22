@@ -21,8 +21,7 @@ func File(file string) (*Conf, error) {
 	}
 	defer handle.Close()
 	//
-	parser := parser.NewParser()
-	parsed, err := parser.ParseReader(handle)
+	parsed, err := parser.DefaultParser.ParseReader(handle)
 	if err != nil {
 		return nil, errors.Go(err)
 	}
@@ -32,8 +31,7 @@ func File(file string) (*Conf, error) {
 
 // String returns a Conf type by parsing the given string of configuration data.
 func String(s string) (*Conf, error) {
-	parser := parser.NewParser()
-	parsed, err := parser.Parse(s)
+	parsed, err := parser.DefaultParser.Parse(s)
 	if err != nil {
 		return nil, errors.Go(err)
 	}
