@@ -47,7 +47,7 @@ type Tokenizer interface {
 	// Next returns the token and its type that would be returned by Peek() but then advances internal
 	// counters to the next possible token.
 	Next() (string, Token)
-	// Rewind resets the Tokenizer to the postion recorded by calling Memory() or to the beginning
+	// Rewind resets the Tokenizer to the position recorded by calling Memory() or to the beginning
 	// of the string if Memory was never called.
 	Rewind()
 }
@@ -137,7 +137,7 @@ func (me *tokenizer) Next() (string, Token) {
 	return me.Peek()
 }
 
-// Rewind resets the Tokenizer to the postion recorded by calling Memory() or to the beginning
+// Rewind resets the Tokenizer to the position recorded by calling Memory() or to the beginning
 // of the string if Memory was never called.
 func (me *tokenizer) Rewind() {
 	me.n, me.peek, me.typ = me.rewindN, me.rewindPeek, me.rewindTyp

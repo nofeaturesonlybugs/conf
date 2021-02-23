@@ -120,10 +120,8 @@ func (me Parser) Parse(s string) (Parsed, error) {
 	section, key, value, previous, quotation := "", "", "", "", ""
 	//
 	t, st := NewTokenizer(s), StateNone
-	str, tok := "", TokenNone
-	peek, peekT := "", TokenNone
 	for err == nil && !t.EOF() {
-		str, tok = t.Next()
+		str, tok := t.Next()
 		switch st {
 		case StateNone:
 			if tok == TokenAlphaNum {
@@ -151,7 +149,7 @@ func (me Parser) Parse(s string) (Parsed, error) {
 					previous = str
 				}
 				// Whitespace in section name has to be followed by section close or another alphanum.
-				if peek, peekT = t.Peek(); peekT != TokenAlphaNum && !closeSection(peek, peekT) {
+				if peek, peekT := t.Peek(); peekT != TokenAlphaNum && !closeSection(peek, peekT) {
 					err = errors.Errorf("Parsing section name; unexpected token= %v", peek)
 				}
 			} else if tok == TokenPunct {
@@ -170,7 +168,7 @@ func (me Parser) Parse(s string) (Parsed, error) {
 				} else {
 					previous = str
 					// Punctuation in section name has to be followed by another alphanum.
-					if peek, peekT = t.Peek(); peekT != TokenAlphaNum {
+					if peek, peekT := t.Peek(); peekT != TokenAlphaNum {
 						err = errors.Errorf("Parsing section name; unexpected token= %v", peek)
 					}
 				}
@@ -184,7 +182,7 @@ func (me Parser) Parse(s string) (Parsed, error) {
 					previous = str
 				}
 				// Whitespace in key has to be followed by assign or another alphanum.
-				if peek, peekT = t.Peek(); peekT != TokenAlphaNum && !assign(peek, peekT) {
+				if peek, peekT := t.Peek(); peekT != TokenAlphaNum && !assign(peek, peekT) {
 					err = errors.Errorf("Parsing key name; unexpected token= %v", peek)
 				}
 			} else if tok == TokenPunct {
@@ -193,7 +191,7 @@ func (me Parser) Parse(s string) (Parsed, error) {
 				} else {
 					previous = str
 					// Punctuation in key has to be followed by another alphanum.
-					if peek, peekT = t.Peek(); peekT != TokenAlphaNum {
+					if peek, peekT := t.Peek(); peekT != TokenAlphaNum {
 						err = errors.Errorf("Parsing key name; unexpected token= %v", peek)
 					}
 				}
