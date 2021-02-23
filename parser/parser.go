@@ -120,10 +120,9 @@ func (me Parser) Parse(s string) (Parsed, error) {
 	section, key, value, previous, quotation := "", "", "", "", ""
 	//
 	t, st := NewTokenizer(s), StateNone
-	str, tok := "", TokenNone
 	peek, peekT := "", TokenNone
 	for err == nil && !t.EOF() {
-		str, tok = t.Next()
+		str, tok := t.Next()
 		switch st {
 		case StateNone:
 			if tok == TokenAlphaNum {
