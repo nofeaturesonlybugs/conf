@@ -16,9 +16,8 @@ func TestTokenizerNext(t *testing.T) {
 	tokenizer := parser.NewTokenizer(str)
 	chk.NotNil(tokenizer)
 
-	tok, typ := "", parser.TokenNone
 	//
-	tok, typ = tokenizer.Next()
+	tok, typ := tokenizer.Next()
 	chk.Equal(tok, "asdf")
 	chk.Equal(typ, parser.TokenAlphaNum)
 	//
@@ -76,13 +75,12 @@ value = true
 	tokenizer := parser.NewTokenizer(str)
 	chk.NotNil(tokenizer)
 	//
-	tok, typ := "", parser.TokenNone
 	//
-	_, typ = tokenizer.Next() // Ignore the specific newline values as they may change depending on dev environment.
+	_, typ := tokenizer.Next() // Ignore the specific newline values as they may change depending on dev environment.
 	chk.Equal(typ, parser.TokenNewline)
 	//
 	// [main]
-	tok, typ = tokenizer.Next()
+	tok, typ := tokenizer.Next()
 	chk.Equal(tok, "[")
 	chk.Equal(typ, parser.TokenPunct)
 	//
