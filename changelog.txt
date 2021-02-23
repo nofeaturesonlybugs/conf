@@ -1,5 +1,12 @@
 /develop
 
+1.0.1
+    + No external API changes.
+
+    # internal
+    + Refactor ineffectual assignments.
+    + Fix comment typos.
+
 1.0.0
     + Working.
 
