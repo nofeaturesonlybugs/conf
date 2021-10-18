@@ -1,5 +1,13 @@
 /develop
 
+    + Bug fix.  Fields in configuration structs can now be custom types, such as:
+        type SpecialType string
+        struct ConfType {
+            Value SpecialType `conf:"special type"`
+            Values []SpecialType `conf:"special types"`
+        }
+        This fix is provided via setting required version of github.com/nofeaturesonlybugs/set to 0.3.1.
+
 1.0.1
     + No external API changes.
 
