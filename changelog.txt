@@ -1,5 +1,8 @@
 /develop
 
+1.0.3
+    + Update dependencies.
+    
 1.0.2
     + Bug fix.  Fields in configuration structs can now be custom types, such as:
         type SpecialType string
