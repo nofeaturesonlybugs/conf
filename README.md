@@ -1,21 +1,23 @@
-[![Documentation](https://godoc.org/github.com/nofeaturesonlybugs/conf?status.svg)](http://godoc.org/github.com/nofeaturesonlybugs/conf)
+[![Go Reference](https://pkg.go.dev/badge/github.com/nofeaturesonlybugs/conf.svg)](https://pkg.go.dev/github.com/nofeaturesonlybugs/conf)
 [![Go Report Card](https://goreportcard.com/badge/github.com/nofeaturesonlybugs/conf)](https://goreportcard.com/report/github.com/nofeaturesonlybugs/conf)
-[![Build Status](https://travis-ci.com/nofeaturesonlybugs/conf.svg?branch=master)](https://travis-ci.com/nofeaturesonlybugs/conf)
+[![Build Status](https://app.travis-ci.com/nofeaturesonlybugs/conf.svg?branch=master)](https://app.travis-ci.com/nofeaturesonlybugs/conf)
 [![codecov](https://codecov.io/gh/nofeaturesonlybugs/conf/branch/master/graph/badge.svg)](https://codecov.io/gh/nofeaturesonlybugs/conf)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Package `conf` parses configuration data and populates a Go `struct` with the results.  
+Package `conf` parses configuration data and populates a Go `struct` with the results.
 
 The package documentation contains the configuration EBNF but here are some syntax examples:
 
-## Comments  
+## Comments
+
 ```ini
 # Lines beginning with punctuation are comments.
 ; Any punctuation except [] can begin a comment.
 ^ Just know that syntax highlighters won't always know what to do!
 ```
 
-## Keys and Values  
+## Keys and Values
+
 ```
 key = value
 keys can have spaces = values run until the end of the line
@@ -34,7 +36,8 @@ not quoted = asdf '" fdsa
 quotes picked up = `"Hello!" said Dave.`
 ```
 
-## Invalid Keys  
+## Invalid Keys
+
 ```
 # Invalid - whitespace must be followed by [a-z0-9]
 key . = oops
@@ -46,8 +49,10 @@ key.. = oops again
 key . key_extra = nope
 ```
 
-## Sections  
-Create a section with square brackets:  
+## Sections
+
+Create a section with square brackets:
+
 ```
 # These values are global
 key1 = value1
@@ -59,8 +64,10 @@ name = red
 rgb = #ff0000
 ```
 
-## Lists Require No Special Syntax  
-Create lists in your configuration by simply repeating `keys` or `sections`:  
+## Lists Require No Special Syntax
+
+Create lists in your configuration by simply repeating `keys` or `sections`:
+
 ```
 fruits = apples
 fruits = oranges
@@ -79,10 +86,12 @@ name = green
 rgb = 00ff00
 ```
 
-## Easily Populate a Conf Struct  
-Create a `struct` matching the configuration.  
+## Easily Populate a Conf Struct
 
-This `struct` is for the configuration just prior:  
+Create a `struct` matching the configuration.
+
+This `struct` is for the configuration just prior:
+
 ```go
 type T struct {
     Fruits []string `conf:"fruits"`
@@ -94,7 +103,8 @@ type T struct {
 }
 ```
 
-Consume the configuration either as a `string` or `file`.  
+Consume the configuration either as a `string` or `file`.
+
 ```go
 conf, err := conf.String(s)
 if err != nil {
@@ -102,7 +112,8 @@ if err != nil {
 }
 ```
 
-We're using `FillByTag` to map the lowercase config values to our uppercase `struct` members:  
+We're using `FillByTag` to map the lowercase config values to our uppercase `struct` members:
+
 ```go
 var t T
 if err = conf.FillByTag("conf", &t); err != nil {
